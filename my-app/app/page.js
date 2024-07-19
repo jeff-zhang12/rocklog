@@ -1,11 +1,19 @@
 import styles from "./page.module.css";
-import { Link } from "@chakra-ui/react";
+import Post from "../components/post/post"
+import SessionForm from "@/components/session-form/session-form";
+import { createClient } from '@/utils/supabase/server'
 
-export default function Home() {
+export default async function Home() {
+  const supabase = createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  
   return (
     <div>
-        <h1>PanYan</h1>
+      <SessionForm user = {user}/>
+      <Post />
     </div>
-    
+
   );
 }

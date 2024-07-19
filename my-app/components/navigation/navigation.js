@@ -1,11 +1,11 @@
-import { Button, ButtonGroup, Link } from '@chakra-ui/react'
+import { Button, ButtonGroup, Link, Heading } from '@chakra-ui/react'
 
 export default function Navigation() {
     return (
       <div>
-        <Button>
-          <Link href = '/'>Home</Link>
-        </Button>
+        <Heading>
+          <Link href = '/'>Panya</Link>
+        </Heading>
         <Button>
           <Link href = '/account'>Profile</Link>
         </Button>
