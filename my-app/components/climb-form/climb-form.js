@@ -19,10 +19,9 @@ export default function ClimbForm({ user , session_id}) {
 
     async function onSubmit(event) {
         event.preventDefault();
-        console.log({ name, grade, notes });
+        console.log({ name, grade, notes })
         console.log(user?.id)
-
-
+        console.log(session_id)
         try {
             const { error } = await supabase
                 .from('climbs')
@@ -31,6 +30,7 @@ export default function ClimbForm({ user , session_id}) {
                     grade: grade,
                     notes: notes,
                     creator: user?.id,
+                    session: session_id,
                 }])
             if (error) throw error
         } catch (error) {
