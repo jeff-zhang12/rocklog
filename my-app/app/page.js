@@ -1,8 +1,7 @@
 import styles from "./page.module.css";
-import Post from "../components/post/post"
 import SessionForm from "@/components/session-form/session-form";
 import { createClient } from '@/utils/supabase/server'
-import { act } from "react";
+import SessionList from "@/components/session-list/session-list";
 
 export default async function Home() {
   const supabase = createClient()
@@ -12,8 +11,8 @@ export default async function Home() {
 
   return (
     <div>
-      <SessionForm user={user}/>
-      <Post />
+      <SessionForm user={user} active={true}/>
+      <SessionList user={user}/>
     </div>
 
   );

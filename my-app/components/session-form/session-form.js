@@ -17,27 +17,34 @@ import ClimbCard from '../climb-card/climb-card';
 import ClimbForm from '../climb-form/climb-form';
 import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect } from 'react'
+import ClimbList from '../climb-list/climb-list';
 
-export default function SessionForm({ user }) {
+export default function SessionForm({ user, id, active }) {
     const supabase = createClient()
     const [session_id, setID] = useState(null);
+    const [exists, setExists] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    async function createSession() {
+    async function openDrawer() {
         onOpen()
-        try {
-            const { data, error } = await supabase
-                .from('sessions')
-                .insert([{
-                    creator: user?.id,
-                }])
-                .select('id')
-            console.log(data[0]?.id)
-            setID(data[0]?.id)
-            if (error) throw error
-        } catch (error) {
-            alert('Error Creating Session')
+        if (id) {
+            setID(id)
+        } else {
+            try {
+                const { data, error } = await supabase
+                    .from('sessions')
+                    .insert([{
+                        creator: user?.id,
+                    }])
+                    .select('id')
+                console.log(data[0]?.id)
+                setID(data[0]?.id)
+                if (error) throw error
+            } catch (error) {
+                alert('Error Creating Session')
+            }
         }
+
     }
 
     async function endSession() {
@@ -57,10 +64,23 @@ export default function SessionForm({ user }) {
         }
     }
 
+    useEffect(() => {
+        if (!isOpen) {
+            setID(null);
+        }
+        if (id) {
+            setExists(true)
+        }
+    }, [isOpen, id]);
+
     return (
         <div>
-            <Button onClick={createSession}>Start Session</Button>
-            
+            {exists ? (
+                <Button onClick={openDrawer}>View Session</Button>
+
+            ) : (
+                <Button onClick={openDrawer}>Start Session</Button>
+            )}
             <Drawer
                 isOpen={isOpen}
                 placement='left'
@@ -73,16 +93,26 @@ export default function SessionForm({ user }) {
                     <DrawerHeader>Session Log</DrawerHeader>
 
                     <DrawerBody>
-                        <ClimbForm user={user} session_id={session_id} />
-                        
-                        <ClimbCard/>
+                        {active && <ClimbForm user={user} session_id={session_id} />}
+
+                        <ClimbList session_id={session_id} />
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <Button variant='outline' mr={3} onClick={onClose}>
-                            Save Draft
-                        </Button>
-                        <Button colorScheme='teal' onClick={endSession}>Log Session</Button>
+
+                        {active ? (
+                            <div>
+                                <Button variant='outline' mr={3} onClick={onClose}>
+                                    Save Draft
+                                </Button>
+                                <Button colorScheme='teal' onClick={endSession}>Log Session</Button>
+                            </div>
+
+
+                        ) : (
+                            <Button onClick={onClose}>Close</Button>
+                        )}
+
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
