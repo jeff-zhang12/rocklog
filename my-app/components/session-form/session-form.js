@@ -18,6 +18,7 @@ import ClimbForm from '../climb-form/climb-form';
 import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect } from 'react'
 import ClimbList from '../climb-list/climb-list';
+import ClimbTabs from '../climb-type-tabs/climb-type-tabs';
 
 export default function SessionForm({ user, id, active }) {
     const supabase = createClient()
@@ -93,7 +94,7 @@ export default function SessionForm({ user, id, active }) {
                     <DrawerHeader>Session Log</DrawerHeader>
 
                     <DrawerBody>
-                        {active && <ClimbForm user={user} session_id={session_id} />}
+                        {active && <ClimbTabs user={user} session_id={session_id}/>}
 
                         <ClimbList session_id={session_id} />
                     </DrawerBody>

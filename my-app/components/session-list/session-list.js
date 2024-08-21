@@ -10,14 +10,12 @@ export default function SessionList( {user} ){
     
 
     useEffect(() => {
-        console.log(user.id)
         const fetchSessions = async () => {
             if (user) {
                 const { data, error } = await supabase
                 .from('sessions')
                 .select('*')
                 .eq('creator', user.id);
-                
                 if(error) {
                     console.error('Error fetching sessions:', error)
                 }
@@ -32,10 +30,8 @@ export default function SessionList( {user} ){
         const subscription = supabase
         .channel('sessions')
         .on('postgres_changes', {event: '*', schema: 'public', table: 'sessions'}, (payload) =>{
-            if(payload.new.creator === user.id){
-                console.log("New Sesh")
                 fetchSessions()
-            }
+            
         }).subscribe()
 
         return () => {
