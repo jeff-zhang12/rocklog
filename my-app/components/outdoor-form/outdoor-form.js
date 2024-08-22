@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
-import { Input, Button, List, ListItem, Spinner, Text, Link} from "@chakra-ui/react";
+import {
+    Input,
+    Button, 
+    Spinner,
+    Text,
+    Link,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionPanel,
+    AccordionIcon,
+    Box,
+} from "@chakra-ui/react";
 import { createClient } from '@/utils/supabase/client'
 import { gql, useLazyQuery } from "@apollo/client";
 
@@ -14,18 +26,34 @@ export default function OutdoorForm({ user, session_id }) {
                 area_name
                 climbs {
                     name
+                    grades {
+                        vscale
+                    }
                 }
                  ancestors
                 children {
                     areaName
                 }
+                 uuid
+            }
+        }
+    `
+
+    const GET_AREA_NAME = gql`
+        query GetAreaName ($id: ID!){
+            area(uuid: $id) {
+                area_name
             }
         }
     `
 
     const [search, setSearch] = useState("");
     const [notes, setNotes] = useState("");
+    const [name, setName] = useState("")
+    const [grade, setGrade] = useState("")
+    const [areaNames, setAreaNames] = useState({})
     const [SearchAreas, { loading, data }] = useLazyQuery(SEARCH_AREAS)
+    const [GetAreaName] = useLazyQuery(GET_AREA_NAME)
 
     async function onSubmit(event) {
         event.preventDefault();
@@ -44,12 +72,27 @@ export default function OutdoorForm({ user, session_id }) {
 
     }
 
-    
+
     useEffect(() => {
         if (search.length > 3) {
             SearchAreas({ variables: { name: search } })
         }
     }, [search, SearchAreas])
+
+    useEffect(() => {
+        if (data && data.areas) {
+            data.areas.forEach(async area => {
+                const ancestorID = area.ancestors[1]
+                const { data: ancestorData } = await GetAreaName({ variables: { id: ancestorID } })
+                if (ancestorData && !areaNames[ancestorID]) {
+                    setAreaNames(prev => ({
+                        ...prev, [ancestorID]: ancestorData.area.area_name
+                    }))
+                }
+
+            });
+        }
+    }, [data, GetAreaName])
 
 
     return (
@@ -63,11 +106,29 @@ export default function OutdoorForm({ user, session_id }) {
                 <Input colorScheme='teal' name='name' placeholder='"Warmup Boulder" Or "XXX Boulder"' onChange={(e) => setSearch(e.target.value)} />
                 {loading && <Spinner />}
                 {data && (
-                    <List>
+                    <Accordion allowToggle>
                         {data.areas.map((area) => (
-                            <ListItem key={area.area_name}>{area.area_name}</ListItem>
+
+                            <AccordionItem key={area.area_name}>
+                                <h2>
+                                    <AccordionButton>
+                                        <Box as='span' flex='1' textAlign='left'>
+                                        {area.area_name} {areaNames[area.ancestors[1]]}
+                                        </Box>
+                                        <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <AccordionPanel pb={4}>
+                                    {area.climbs.map((climb) => (
+                                        <Text>{climb?.name} - {climb?.grades?.vscale || 'None'}</Text>
+                                    ))}
+                                </AccordionPanel>
+                            </AccordionItem>
+
+
+
                         ))}
-                    </List>
+                    </Accordion>
                 )}
                 <label>Climb Notes: </label>
                 <Input colorScheme='teal' name='notes' placeholder='Type here...' onChange={(e) => setNotes(e.target.value)} />
@@ -75,7 +136,6 @@ export default function OutdoorForm({ user, session_id }) {
             </form>
 
             <Text> Powered By <Link color='teal.500' href='https://openbeta.io'>Open Beta</Link></Text>
-
         </div>
     )
 }
