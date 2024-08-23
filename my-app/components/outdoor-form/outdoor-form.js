@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     Input,
-    Button, 
+    Button,
     Spinner,
     Text,
     Link,
@@ -11,6 +11,7 @@ import {
     AccordionPanel,
     AccordionIcon,
     Box,
+    Divider,
 } from "@chakra-ui/react";
 import { createClient } from '@/utils/supabase/client'
 import { gql, useLazyQuery } from "@apollo/client";
@@ -28,6 +29,7 @@ export default function OutdoorForm({ user, session_id }) {
                     name
                     grades {
                         vscale
+                        yds
                     }
                 }
                  ancestors
@@ -105,31 +107,32 @@ export default function OutdoorForm({ user, session_id }) {
                 <label>Boulder Name:</label>
                 <Input colorScheme='teal' name='name' placeholder='"Warmup Boulder" Or "XXX Boulder"' onChange={(e) => setSearch(e.target.value)} />
                 {loading && <Spinner />}
-                {data && (
+                {data && search.length > 3 &&(
                     <Accordion allowToggle>
                         {data.areas.map((area) => (
 
-                            <AccordionItem key={area.area_name}>
+                            area.climbs.length > 0 && (<AccordionItem key={area.area_name}>
                                 <h2>
                                     <AccordionButton>
                                         <Box as='span' flex='1' textAlign='left'>
-                                        {area.area_name} {areaNames[area.ancestors[1]]}
+                                            {area.area_name} {areaNames[area.ancestors[1]]}
                                         </Box>
                                         <AccordionIcon />
                                     </AccordionButton>
                                 </h2>
                                 <AccordionPanel pb={4}>
                                     {area.climbs.map((climb) => (
-                                        <Text>{climb?.name} - {climb?.grades?.vscale || 'None'}</Text>
+                                        <Text>{climb?.name} - {climb?.grades?.vscale || climb?.grades?.yds || 'No Grade'}</Text>
                                     ))}
                                 </AccordionPanel>
-                            </AccordionItem>
+                            </AccordionItem>)
 
 
 
                         ))}
                     </Accordion>
                 )}
+                <Divider></Divider>
                 <label>Climb Notes: </label>
                 <Input colorScheme='teal' name='notes' placeholder='Type here...' onChange={(e) => setNotes(e.target.value)} />
                 <Button colorScheme='teal' type='submit'>Add Climb</Button>
