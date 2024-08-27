@@ -11,7 +11,6 @@ import {
     AccordionPanel,
     AccordionIcon,
     Box,
-    Divider,
     Radio,
     RadioGroup,
     Stack,
@@ -57,7 +56,7 @@ export default function OutdoorForm({ user, session_id }) {
     const [notes, setNotes] = useState("");
     const [name, setName] = useState("")
     const [grade, setGrade] = useState("")
-    const [radioValue,setRadioValue] = useState("")
+    const [radioValue, setRadioValue] = useState("")
     const [areaNames, setAreaNames] = useState({})
     const [SearchAreas, { loading, data }] = useLazyQuery(SEARCH_AREAS)
     const [GetAreaName] = useLazyQuery(GET_AREA_NAME)
@@ -80,7 +79,7 @@ export default function OutdoorForm({ user, session_id }) {
         }
 
     }
-    function selectClimb(climb){
+    function selectClimb(climb) {
         console.log(climb)
         setRadioValue(climb.uuid)
         setName(climb.name)
@@ -117,46 +116,50 @@ export default function OutdoorForm({ user, session_id }) {
 
 
             <form id='climb-form' onSubmit={onSubmit}>
-                <label>Boulder Name:</label>
-                <Input colorScheme='teal' name='name' placeholder='"Warmup Boulder" Or "XXX Boulder"' onChange={(e) => setSearch(e.target.value)} />
-                {loading && <Spinner />}
-                {data && search.length > 3 && (
-                    <Accordion allowToggle>
-                        {data.areas.map((area) => (
+                <Box>
+                    <Text>Boulder Name:</Text>
+                    <Input colorScheme='teal' name='name' placeholder='"Warmup Boulder" Or "XXX Boulder"' onChange={(e) => setSearch(e.target.value)} />
+                    {loading && <Spinner />}
+                    {data && search.length > 3 && (
+                        <Accordion allowToggle>
+                            {data.areas.map((area) => (
 
-                            area.climbs.length > 0 && (<AccordionItem key={area.area_name}>
-                                <h2>
-                                    <AccordionButton>
-                                        <Box as='span' flex='1' textAlign='left'>
-                                            {area.area_name} - {areaNames[area.ancestors[1]]}
-                                        </Box>
-                                        <AccordionIcon />
-                                    </AccordionButton>
-                                </h2>
-                                <AccordionPanel pb={4}>
-                                    <RadioGroup 
-                                    onChange={(climbID) => {
-                                        selectClimb(area.climbs.find(climb =>climb.uuid ===climbID))
-                                        }
-                                    } 
-                                    value={radioValue}>
-                                        <Stack>
-                                            {area.climbs.map((climb) => (
-                                                <Radio key={climb} value={climb.uuid}>
-                                                    {climb?.name} - {climb.grades?.vscale || climb.grades?.yds || 'No Grade'}
-                                                </Radio>
-                                            ))}
-                                        </Stack>
-                                    </RadioGroup>
+                                area.climbs.length > 0 && (<AccordionItem key={area.area_name}>
+                                    <h2>
+                                        <AccordionButton>
+                                            <Box as='span' flex='1' textAlign='left'>
+                                                {area.area_name} - {areaNames[area.ancestors[1]]}
+                                            </Box>
+                                            <AccordionIcon />
+                                        </AccordionButton>
+                                    </h2>
+                                    <AccordionPanel pb={4}>
+                                        <RadioGroup
+                                            onChange={(climbID) => {
+                                                selectClimb(area.climbs.find(climb => climb.uuid === climbID))
+                                            }
+                                            }
+                                            value={radioValue}>
+                                            <Stack>
+                                                {area.climbs.map((climb) => (
+                                                    <Radio key={climb} value={climb.uuid}>
+                                                        {climb?.name} - {climb.grades?.vscale || climb.grades?.yds || 'No Grade'}
+                                                    </Radio>
+                                                ))}
+                                            </Stack>
+                                        </RadioGroup>
 
-                                </AccordionPanel>
-                            </AccordionItem>)
-                        ))}
-                    </Accordion>
-                )}
-                <Divider></Divider>
-                <label>Climb Notes: </label>
-                <Input colorScheme='teal' name='notes' placeholder='Type here...' onChange={(e) => setNotes(e.target.value)} />
+                                    </AccordionPanel>
+                                </AccordionItem>)
+                            ))}
+                        </Accordion>
+                    )}
+                </Box>
+                <Box marginTop="5px" marginBottom="5px">
+                    <Text>Climb Notes: </Text>
+                    <Input colorScheme='teal' name='notes' placeholder='Type here...' onChange={(e) => setNotes(e.target.value)} />
+                </Box>
+
                 <Button colorScheme='teal' type='submit'>Add Climb</Button>
             </form>
 
