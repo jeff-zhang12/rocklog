@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client"
 import ClimbCard from "../climb-card/climb-card"
 
-export default function ClimbList({ session_id }) {
+export default function ClimbList({ session_id , active }) {
     const supabase = createClient();
     const [climbs, setClimbs] = useState([])
 
@@ -43,7 +43,7 @@ export default function ClimbList({ session_id }) {
         <Box>
             <Heading>Climbs</Heading>
             {climbs.map((climb) => (
-                <ClimbCard key={climb.id} climb={climb} />
+                <ClimbCard key={climb.id} climb={climb} active={active}/>
             ))}
         </Box>
     );

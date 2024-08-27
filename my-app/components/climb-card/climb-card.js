@@ -1,22 +1,24 @@
 import { createClient } from "@/utils/supabase/client";
-import { Button, Card, Heading, Text } from "@chakra-ui/react";
+import { Button, Card, Divider, Heading, Text } from "@chakra-ui/react";
 
-export default function ClimbCard({ climb }) {
+export default function ClimbCard({ climb , active }) {
     const supabase = createClient()
-    
+
     async function deleteClimb() {
         const { error } = await supabase
             .from('climbs')
             .delete()
             .eq('id', climb.id)
-
+        if (error) {
+            console.error('Error deleting climb:', error)
+        }
     };
     return (
-        <Card>
-            <Heading size='lg'>{climb.name}</Heading>
-            <Heading size='md'>{climb.grade}</Heading>
+        <Card w="80%" padding="15px" margin="5px">
+            <Heading size='md'>{climb.name}</Heading>
+            <Text size='2xl'>{climb.grade}</Text>
             <Text size='lg'>{climb.notes}</Text>
-            <Button onClick={deleteClimb}>Delete</Button>
+            {active && <Button onClick={deleteClimb} w="20%" colorScheme="red" variant="outline">Delete</Button>}
         </Card>
     );
 }

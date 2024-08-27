@@ -12,12 +12,14 @@ import {
     Button,
     Input,
     Select,
+    Divider,
 } from '@chakra-ui/react'
 import ClimbCard from '../climb-card/climb-card';
 import ClimbForm from '../climb-form/climb-form';
 import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect } from 'react'
 import ClimbList from '../climb-list/climb-list';
+import ClimbTabs from '../climb-type-tabs/climb-type-tabs';
 
 export default function SessionForm({ user, id, active }) {
     const supabase = createClient()
@@ -76,10 +78,10 @@ export default function SessionForm({ user, id, active }) {
     return (
         <div>
             {exists ? (
-                <Button onClick={openDrawer}>View Session</Button>
+                <Button onClick={openDrawer} colorScheme="teal" variant="outline">View Session</Button>
 
             ) : (
-                <Button onClick={openDrawer}>Start Session</Button>
+                <Button onClick={openDrawer} colorScheme="teal">Start Session</Button>
             )}
             <Drawer
                 isOpen={isOpen}
@@ -93,9 +95,9 @@ export default function SessionForm({ user, id, active }) {
                     <DrawerHeader>Session Log</DrawerHeader>
 
                     <DrawerBody>
-                        {active && <ClimbForm user={user} session_id={session_id} />}
-
-                        <ClimbList session_id={session_id} />
+                        {active && <ClimbTabs user={user} session_id={session_id}/>}
+                        <Divider></Divider>
+                        <ClimbList session_id={session_id} active={active}/>
                     </DrawerBody>
 
                     <DrawerFooter>
