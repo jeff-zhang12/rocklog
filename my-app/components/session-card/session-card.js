@@ -16,9 +16,9 @@ export default function SessionCard({ user, session }) {
 
     };
     return (
-        <Card padding="15px" margin="5px" w="33%">
+        <Card padding="15px" margin="5px" w="90%">
             <Heading size='md'>{session.name}</Heading>
-            <Text size='sm'>
+            <Text size='xs' color="gray">
                     {new Date(session.created_at).toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'short',
@@ -27,6 +27,7 @@ export default function SessionCard({ user, session }) {
                     minute: '2-digit',
                 })}
             </Text>
+            <Text size='md'>{session.notes}</Text>
             <Stack direction="row">
                 <SessionForm user={user} id={session.id} active={session.active} />
                 <Button onClick={deleteSession} w="20%" colorScheme="red" variant="outline">Delete</Button>

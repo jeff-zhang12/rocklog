@@ -1,22 +1,22 @@
-import { Button, ButtonGroup, Link, Heading, Stack, Box } from '@chakra-ui/react'
+import { Button, Link, Heading, Flex } from '@chakra-ui/react'
 
 export default function Navigation() {
   return (
-    <Stack direction="row" alignContent="center" padding="20px">
-      <Box w="50%">
+    <Flex direction="row" alignContent="center" padding="20px">
+      <Flex w="75%">
         <Heading>
           <Link href='/'>Panya</Link>
         </Heading>
-      </Box>
-      <Box w="50%" alignContent="center" justifyContent="center">
-        <Button>
+      </Flex>
+      <Flex w="25%" alignContent="center" justifyContent="flex-end">
+        <Button margin="5px">
           <Link href='/account'>Profile</Link>
         </Button>
-        <Button>
+        <Button margin="5px">
           <Link href='/login'>Log In/Sign up</Link>
         </Button>
-      </Box>
+      </Flex>
 
-    </Stack>
+    </Flex>
   );
 }

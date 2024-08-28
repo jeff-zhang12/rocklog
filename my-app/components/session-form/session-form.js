@@ -11,24 +11,34 @@ import {
     useDisclosure,
     Button,
     Input,
-    Select,
     Divider,
+    Box,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    Text
 } from '@chakra-ui/react'
-import ClimbCard from '../climb-card/climb-card';
-import ClimbForm from '../climb-form/climb-form';
 import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect } from 'react'
-import ClimbList from '../climb-list/climb-list';
-import ClimbTabs from '../climb-type-tabs/climb-type-tabs';
+import ClimbList from '../climb-list/climb-list'
+import ClimbTabs from '../climb-type-tabs/climb-type-tabs'
 
 export default function SessionForm({ user, id, active }) {
     const supabase = createClient()
-    const [session_id, setID] = useState(null);
-    const [exists, setExists] = useState(false);
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [session_id, setID] = useState(null)
+    const [exists, setExists] = useState(false)
+    const [name, setName] = useState("Bouldering Session")
+    const [notes, setNotes] = useState("")
+    const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
+    const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
+
 
     async function openDrawer() {
-        onOpen()
+        onDrawerOpen()
         if (id) {
             setID(id)
         } else {
@@ -51,42 +61,46 @@ export default function SessionForm({ user, id, active }) {
 
     async function endSession() {
         try {
-            console.log(session_id)
             const { error } = await supabase
                 .from('sessions')
-                .update({ active: false })
-                .eq('id', session_id);
+                .update({ 
+                    name: name,
+                    notes: notes,
+                    active: false 
+                })
+                .eq('id', session_id)
 
             if (error) {
-                throw error;
+                throw error
             }
-            onClose();
+            onDrawerClose()
+            onModalClose()
         } catch (error) {
-            alert('Error Ending Session');
+            alert('Error Ending Session')
         }
     }
 
     useEffect(() => {
-        if (!isOpen) {
-            setID(null);
+        if (!isDrawerOpen) {
+            setID(null)
         }
         if (id) {
             setExists(true)
         }
-    }, [isOpen, id]);
+    }, [isDrawerOpen, id]);
 
     return (
-        <div>
+        <Box>
             {exists ? (
                 <Button onClick={openDrawer} colorScheme="teal" variant="outline">View Session</Button>
 
             ) : (
-                <Button onClick={openDrawer} colorScheme="teal">Start Session</Button>
+                <Button onClick={openDrawer} colorScheme="teal" margin="5px" width="90%">Start Session</Button>
             )}
             <Drawer
-                isOpen={isOpen}
+                isOpen={isDrawerOpen}
                 placement='left'
-                onClose={onClose}
+                onClose={onDrawerClose}
                 size='xl'
             >
                 <DrawerOverlay />
@@ -95,29 +109,53 @@ export default function SessionForm({ user, id, active }) {
                     <DrawerHeader>Session Log</DrawerHeader>
 
                     <DrawerBody>
-                        {active && <ClimbTabs user={user} session_id={session_id}/>}
+                        {active && <ClimbTabs user={user} session_id={session_id} />}
                         <Divider></Divider>
-                        <ClimbList session_id={session_id} active={active}/>
+                        <ClimbList session_id={session_id} active={active} />
                     </DrawerBody>
 
                     <DrawerFooter>
 
                         {active ? (
                             <div>
-                                <Button variant='outline' mr={3} onClick={onClose}>
+                                <Button variant='outline' mr={3} onClick={onDrawerClose}>
                                     Save Draft
                                 </Button>
-                                <Button colorScheme='teal' onClick={endSession}>Log Session</Button>
+                                <Button colorScheme='teal' onClick={onModalOpen}>Log Session</Button>
                             </div>
 
 
                         ) : (
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={onDrawerClose}>Close</Button>
                         )}
 
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
-        </div>
+            <Modal isOpen={isModalOpen} onClose={onModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Modal Title</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Box marginTop="5px" marginBottom="5px">
+                            <Text>Session Name: </Text>
+                            <Input colorScheme='teal' name='name' defaultValue="Bouldering Session" onChange={(e) => setName(e.target.value)} />
+                        </Box>
+                        <Box marginTop="5px" marginBottom="5px">
+                            <Text>Session Notes: </Text>
+                            <Input colorScheme='teal' name='notes' onChange={(e) => setNotes(e.target.value)} />
+                        </Box>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button variant="outline" onClick={onModalClose}>
+                            Cancel
+                        </Button>
+                        <Button colorScheme='teal' onClick={endSession}>Finish Logging</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </Box>
     );
 }
