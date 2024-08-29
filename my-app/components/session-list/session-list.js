@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase/client"
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import SessionCard from "../session-card/session-card";
 
 export default function SessionList( {user} ){
@@ -20,7 +20,14 @@ export default function SessionList( {user} ){
                     console.error('Error fetching sessions:', error)
                 }
                 else{
-                    setSessions(data.reverse())
+                    setSessions(data.sort((a, b) => {
+                        const dateA = new Date(a.created_at)
+                        const dateB = new Date(b.created_at)
+
+                        if (dateA < dateB) return -1
+                        if (dateA > dateB) return 1
+                        return 0
+                      }).reverse())
                 }
             }
         }

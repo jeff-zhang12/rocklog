@@ -31,7 +31,6 @@ export default function AccountForm({ user }) {
         setAvatarUrl(data.avatar_url)
       }
     } catch (error) {
-      console.error('Error loading user data:', error)
       alert('Error loading user data!')
     } finally {
       setLoading(false)
