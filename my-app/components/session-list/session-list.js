@@ -11,11 +11,10 @@ export default function SessionList( {user} ){
 
     useEffect(() => {
         const fetchSessions = async () => {
-            if (user) {
                 const { data, error } = await supabase
                 .from('sessions')
                 .select('*')
-                .eq('creator', user.id);
+                .eq('creator', user?.id || "7568cce5-3a04-42f0-8e7f-f4d2f0a5bd01");
                 if(error) {
                     console.error('Error fetching sessions:', error)
                 }
@@ -29,7 +28,6 @@ export default function SessionList( {user} ){
                         return 0
                       }).reverse())
                 }
-            }
         }
 
         fetchSessions()

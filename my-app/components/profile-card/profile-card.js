@@ -1,7 +1,7 @@
 "use client"
 
 import { createClient } from "@/utils/supabase/client"
-import { Card, Heading, Text, Image } from "@chakra-ui/react"
+import { Card, Heading, Text, Image, Flex } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 
 export default function ProfileCard({ user }) {
@@ -34,27 +34,28 @@ export default function ProfileCard({ user }) {
     }
 
     useEffect(() => {
-        console.log(user)
         if (user) {
             getProfile()
         }
         else {
             setFullname("Alex HandHold")
             setBio("This is a test account, play around!")
-            setAvatarUrl("")
+            setAvatarUrl("https://yt3.googleusercontent.com/kMc1yCReVuFXw39PQcFjn-v-dW9BEVy36AMuRP8Ru2HFfFTCn0E4mZdngOtWDYwdRPCuFKLhUQ=s160-c-k-c0x00ffffff-no-rj")
         }
     }, [user, getProfile])
 
     return (
-        <Card>
-            <Image
-                borderRadius='full'
-                boxSize='100px'
-                src={avatarURL}
-                fallbackSrc='/public/blank-avatar.png'
-            />
-            <Heading>{name}</Heading>
-            <Text>{bio}</Text>
+        <Card padding='15px'>
+            <Flex direction="column" alignItems='center'>
+                <Image
+                    borderRadius='full'
+                    boxSize='75px'
+                    src={avatarURL}
+                    fallbackSrc='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                />
+                <Heading size='md'>{name}</Heading>
+                <Text size='lg'>{bio}</Text>
+            </Flex>
         </Card>
     )
 }

@@ -46,10 +46,9 @@ export default function SessionForm({ user, id, active }) {
                 const { data, error } = await supabase
                     .from('sessions')
                     .insert([{
-                        creator: user?.id,
+                        creator: user?.id || "7568cce5-3a04-42f0-8e7f-f4d2f0a5bd01",
                     }])
                     .select('id')
-                console.log(data[0]?.id)
                 setID(data[0]?.id)
                 if (error) throw error
             } catch (error) {
