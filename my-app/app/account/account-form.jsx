@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { Card } from '@chakra-ui/react'
 
 export default function AccountForm({ user }) {
   const supabase = createClient()
@@ -69,7 +70,7 @@ export default function AccountForm({ user }) {
   }
 
   return (
-    <div className="form-widget">
+    <Card className="form-widget" padding="10px" width="80%">
       <div>
         <label htmlFor="email">Email: </label>
         <input id="email" type="text" value={user?.email} disabled />
@@ -111,14 +112,6 @@ export default function AccountForm({ user }) {
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>
-
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
-    </div>
+    </Card>
   )
 }

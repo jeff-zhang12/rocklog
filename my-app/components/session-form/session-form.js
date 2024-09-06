@@ -94,7 +94,7 @@ export default function SessionForm({ user, id, active }) {
                 <Button onClick={openDrawer} colorScheme="teal" variant="outline">View Session</Button>
 
             ) : (
-                <Button onClick={openDrawer} colorScheme="teal" margin="5px" width="90%">Start Session</Button>
+                <Button onClick={openDrawer} colorScheme="teal" margin="5px" marginBottom="10px" width="90%">Start Session</Button>
             )}
             <Drawer
                 isOpen={isDrawerOpen}

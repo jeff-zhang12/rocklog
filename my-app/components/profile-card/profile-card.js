@@ -45,7 +45,7 @@ export default function ProfileCard({ user }) {
     }, [user, getProfile])
 
     return (
-        <Card padding='15px'>
+        <Card padding='15px' marginRight="10px" marginLeft="10px">
             <Flex direction="column" alignItems='center'>
                 <Image
                     borderRadius='full'
