@@ -20,7 +20,7 @@ export default async function Home() {
         <SessionList user={user}/>
       </Box>
       <Box width="25%">
-        Stats
+        
       </Box>
     </Flex>
     

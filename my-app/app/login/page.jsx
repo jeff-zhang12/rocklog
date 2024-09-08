@@ -11,11 +11,11 @@ export default function LoginPage() {
           <Text htmlFor="password">Password:</Text>
           <Input id="password" name="password" type="password" required />
           <Flex marginTop="20px" justifyContent="center">
-            <Button margin="5px">
-              <button formAction={login}><b>Log In</b></button>
+            <Button margin="5px" type="submit" colorScheme="teal" formAction={login}>
+              Log In
             </Button>
-            <Button margin="5px">
-              <button formAction={signup}><b>Sign up</b></button>
+            <Button margin="5px" type="submit" formAction={signup}>
+              Sign up
             </Button>
 
           </Flex>

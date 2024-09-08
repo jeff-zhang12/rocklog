@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { Card } from '@chakra-ui/react'
+import { Card, Input, Text, Button, Box } from '@chakra-ui/react'
 
 export default function AccountForm({ user }) {
   const supabase = createClient()
@@ -62,7 +62,6 @@ export default function AccountForm({ user }) {
       if (error) throw error
       alert('Profile updated!')
     } catch (error) {
-      console.error('Error updating the data:', error)
       alert('Error updating the data!')
     } finally {
       setLoading(false)
@@ -70,48 +69,58 @@ export default function AccountForm({ user }) {
   }
 
   return (
-    <Card className="form-widget" padding="10px" width="80%">
-      <div>
-        <label htmlFor="email">Email: </label>
-        <input id="email" type="text" value={user?.email} disabled />
-      </div>
-      <div>
-        <label htmlFor="fullName">Full Name: </label>
-        <input
+    <Card className="form-widget" padding="5px" width="80%">
+      <Box margin="5px">
+        <Text htmlFor="email">Email: </Text>
+        <Input id="email" type="text" value={user?.email} disabled />
+      </Box>
+      <Box margin="5px">
+        <Text htmlFor="fullName">Full Name: </Text>
+        <Input
           id="fullName"
           type="text"
           value={fullname || ''}
           onChange={(e) => setFullname(e.target.value)}
         />
-      </div>
-      <div>
-        <label htmlFor="username">Username: </label>
-        <input
+      </Box>
+      <Box margin="5px">
+        <Text htmlFor="username">Username: </Text>
+        <Input
           id="username"
           type="text"
           value={username || ''}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </div>
-      <div>
-        <label htmlFor="bio">Bio: </label>
-        <input
+      </Box>
+      <Box margin="5px">
+        <Text htmlFor="bio">Bio: </Text>
+        <Input
           id="bio"
           type="text"
           value={bio || ''}
           onChange={(e) => setBio(e.target.value)}
         />
-      </div>
+      </Box>
 
-      <div>
-        <button
-          className="button primary block"
+      <Box margin="5px">
+        <Text htmlFor="bio">Avatar URL: </Text>
+        <Input
+          id="avatar"
+          type="text"
+          value={avatar_url || ''}
+          onChange={(e) => setAvatarUrl(e.target.value)}
+        />
+      </Box >
+
+      <Box margin="5px">
+        <Button
+          colorScheme="teal"
           onClick={() => updateProfile({ username, bio, avatar_url })}
           disabled={loading}
         >
           {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
+        </Button>
+      </Box>
     </Card>
   )
 }
