@@ -26,7 +26,7 @@ export default function ClimbForm({ user, session_id }) {
                     name: name,
                     grade: grade,
                     notes: notes,
-                    creator: user?.id,
+                    creator: user?.id || "7568cce5-3a04-42f0-8e7f-f4d2f0a5bd01",
                     session: session_id,
                 }])
             if (error) throw error

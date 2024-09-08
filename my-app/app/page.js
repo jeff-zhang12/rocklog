@@ -1,8 +1,8 @@
-import styles from "./page.module.css";
 import SessionForm from "@/components/session-form/session-form";
 import { createClient } from '@/utils/supabase/server'
 import SessionList from "@/components/session-list/session-list";
 import { Box, Flex } from "@chakra-ui/react";
+import ProfileCard from "@/components/profile-card/profile-card";
 
 export default async function Home() {
   const supabase = createClient()
@@ -13,14 +13,14 @@ export default async function Home() {
   return (
     <Flex direction="row">
       <Box width="25%">
-        Profile
+        <ProfileCard user={user}/>
       </Box>
       <Box width="50%">
         <SessionForm user={user} active={true}/>
         <SessionList user={user}/>
       </Box>
       <Box width="25%">
-        Stats
+        
       </Box>
     </Flex>
     
